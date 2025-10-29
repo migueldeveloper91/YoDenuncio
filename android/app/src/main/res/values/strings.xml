@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">YoDenuncio</string>
+    <string name="title_activity_main">YoDenuncio</string>
+    <string name="package_name">com.tuempresa.yodenuncio</string>
+    <string name="custom_url_scheme">com.tuempresa.yodenuncio</string>
+</resources>
