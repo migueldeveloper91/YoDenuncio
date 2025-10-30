@@ -1,143 +1,126 @@
 # 📱 YoDenuncio – Aplicación Móvil de Participación Ciudadana
 
-**YoDenuncio** es una aplicación móvil multiplataforma desarrollada con **Ionic + React** y **Firebase**, cuyo propósito es facilitar la **denuncia ciudadana de hechos delictivos, irregularidades o situaciones de riesgo** desde cualquier dispositivo móvil.  
-El objetivo principal es brindar a los usuarios una herramienta ágil, confiable y segura para reportar incidentes que afecten la convivencia o seguridad en su entorno.
+**YoDenuncio** es una aplicación móvil multiplataforma desarrollada con **Ionic + React + Firebase**, cuyo propósito es facilitar la **denuncia ciudadana de hechos delictivos, irregularidades o situaciones de riesgo** desde cualquier dispositivo móvil.  
+El objetivo principal es brindar a los usuarios una herramienta **ágil, confiable y segura** para reportar incidentes que afecten la convivencia o seguridad en su entorno.
 
 ---
 
-## 🧩 1. Justificación
+## 🌍 Descripción General
 
-La inseguridad y la falta de canales efectivos de denuncia son problemáticas comunes en muchas comunidades.  
-**YoDenuncio** busca empoderar a los ciudadanos mediante una plataforma digital que permita reportar, de forma sencilla, eventos como robos, vandalismo, violencia o emergencias, con la posibilidad de adjuntar fotos, ubicación y descripción del suceso.
+**YoDenuncio** promueve la participación ciudadana y la colaboración con las autoridades mediante una aplicación que permite registrar denuncias **geolocalizadas con evidencia fotográfica**, ver su historial y recibir actualizaciones sobre el estado de los reportes.
 
-### 🔹 Pertinencia del proyecto
-El desarrollo como **aplicación multiplataforma híbrida** (con **Ionic + React**) permite alcanzar una mayor cobertura, ejecutándose tanto en **Android como en iOS** desde una sola base de código, optimizando tiempo y recursos de desarrollo.
-
-### 🔹 Razones para el enfoque multiplataforma
-- **Eficiencia de costos y tiempo:** Una sola base de código para ambas plataformas.  
-- **Consistencia visual:** Componentes adaptables al diseño nativo (Material Design y Cupertino).  
-- **Mantenimiento simplificado:** Actualizaciones centralizadas.  
-- **Mayor alcance:** Disponible para diferentes dispositivos y sistemas operativos.
+El sistema se basa en tecnologías modernas y escalables, con una arquitectura optimizada para dispositivos móviles Android e iOS.
 
 ---
 
-## 🎯 2. Objetivos
+## 🧠 Tecnologías y Herramientas
 
-### Objetivo general
-Desarrollar una **aplicación móvil multiplataforma híbrida** que permita a los ciudadanos **registrar y enviar denuncias geolocalizadas** con evidencia fotográfica, mejorando los canales de comunicación con las autoridades competentes.
-
-### Objetivos específicos
-1. Implementar el registro e inicio de sesión mediante Firebase Authentication.  
-2. Diseñar un formulario de denuncia que permita incluir descripción, categoría, ubicación y evidencia fotográfica.  
-3. Integrar la API nativa de cámara y geolocalización mediante Capacitor.  
-4. Permitir al usuario consultar el historial de denuncias realizadas.  
-5. Desarrollar una interfaz accesible y adaptativa para Android e iOS.  
-6. Incorporar una sección “Acerca de” con información institucional y de los desarrolladores.
-
----
-
-## ⚙️ 3. Requerimientos del sistema
-
-### 🔹 Requerimientos funcionales (RF)
-
-| ID | Requerimiento funcional | Descripción |
-|----|--------------------------|--------------|
-| RF-001 | Registro de usuarios | El sistema debe permitir crear una cuenta mediante correo electrónico y contraseña. |
-| RF-002 | Inicio de sesión | El usuario podrá autenticarse con sus credenciales de Firebase. |
-| RF-003 | Crear denuncia | El usuario podrá registrar una denuncia con descripción, foto y ubicación. |
-| RF-004 | Adjuntar imagen | La app debe permitir capturar o seleccionar una imagen desde la galería. |
-| RF-005 | Geolocalización | La aplicación debe obtener la ubicación GPS al momento de crear una denuncia. |
-| RF-006 | Historial de denuncias | El usuario podrá visualizar las denuncias creadas previamente. |
-| RF-007 | Visualizar detalle | Al seleccionar una denuncia, se mostrará su información completa. |
-| RF-008 | Notificaciones | El usuario recibirá notificaciones cuando su denuncia cambie de estado. |
-| RF-009 | Sección “Acerca de” | La app incluirá una pantalla con información del proyecto y autores. |
-| RF-010 | Cierre de sesión | El sistema debe permitir al usuario cerrar su sesión de manera segura. |
+| Categoría                     | Tecnologías utilizadas                                                             |
+| ----------------------------- | ---------------------------------------------------------------------------------- |
+| **Framework principal**       | [Ionic Framework v7](https://ionicframework.com/) + [React 19](https://react.dev/) |
+| **Librerías UI**              | Tailwind CSS v4, Ionicons, shadcn/ui (selectiva)                                   |
+| **Estado global**             | Zustand                                                                            |
+| **Validación de formularios** | React Hook Form + Zod                                                              |
+| **Backend / BaaS**            | Firebase Authentication, Firestore, Firebase Storage                               |
+| **Acceso nativo**             | Capacitor v5 (Cámara, Geolocalización, Archivos)                                   |
+| **Routing**                   | React Router DOM v5                                                                |
+| **Compilación y desarrollo**  | Vite + TypeScript                                                                  |
+| **Pruebas y linting**         | Vitest, Cypress, ESLint                                                            |
+| **Estilos**                   | TailwindCSS + CSS variables personalizadas                                         |
+| **Control de versiones**      | Git + GitHub                                                                       |
 
 ---
 
-### 🔹 Requerimientos no funcionales (RNF)
-
-| ID | Requerimiento no funcional | Descripción |
-|----|-----------------------------|-------------|
-| RNF-001 | Framework de desarrollo | La aplicación debe desarrollarse usando **Ionic v7+** con **React**. |
-| RNF-002 | Acceso nativo | Debe usar **Capacitor v5+** para cámara, GPS y almacenamiento local. |
-| RNF-003 | Rendimiento | La interfaz debe mantener fluidez incluso con múltiples denuncias almacenadas. |
-| RNF-004 | Compatibilidad | Compatible con Android 8+ y iOS 13+. |
-| RNF-005 | Seguridad | El acceso y almacenamiento de datos debe realizarse mediante Firebase Authentication y Firestore Security Rules. |
-| RNF-006 | Usabilidad | La interfaz debe ser limpia, intuitiva y responsiva. |
-| RNF-007 | Operatividad offline | La aplicación debe permitir crear denuncias incluso sin conexión, sincronizando datos al reconectarse. |
-| RNF-008 | Escalabilidad | La arquitectura debe permitir agregar módulos futuros (chat, mapa de calor, estadísticas). |
-| RNF-009 | Accesibilidad | Debe cumplir con buenas prácticas de accesibilidad (contraste, tamaño de fuente, navegación). |
-
----
-
-## 🧭 4. Flujo de navegación
-
-El flujo principal de la aplicación sigue una estructura de navegación simple e intuitiva:
-
-```
-[Inicio de Sesión]
-       ↓
-[Inicio Principal]
-   ├── Nueva Denuncia → [Formulario] → [Confirmación]
-   ├── Historial → [Detalle de Denuncia]
-   └── Acerca de
-```
-
----
-
-## 🧠 5. Tecnologías utilizadas
-
-| Tecnología | Uso |
-|-------------|-----|
-| **Ionic Framework** | Desarrollo multiplataforma híbrido. |
-| **React** | Interfaz basada en componentes. |
-| **Firebase Authentication** | Registro e inicio de sesión. |
-| **Cloud Firestore** | Base de datos en tiempo real. |
-| **Firebase Storage** | Almacenamiento de imágenes. |
-| **Capacitor** | Acceso nativo a cámara, GPS y almacenamiento. |
-| **TypeScript** | Tipado estático y seguridad en el código. |
-| **HTML/CSS** | Maquetación y estilos visuales. |
-
----
-
-## 📁 6. Estructura del proyecto
+## ⚙️ Estructura del Proyecto
 
 ```
 yo-denuncio/
 │
 ├── src/
 │   ├── components/         # Componentes reutilizables (botones, inputs, modales)
+│   │   ├── layout/         # Cabeceras, navegación, estructura visual
+│   │   └── ui/             # Componentes atómicos (Button, Input, Modal)
 │   ├── pages/              # Pantallas principales (Login, Home, Denuncia, Acerca de)
 │   ├── services/           # Firebase, geolocalización y lógica de negocio
-│   ├── theme/              # Estilos globales y variables de color
+│   ├── stores/             # Estados globales con Zustand
+│   ├── theme/              # Estilos globales y variables
 │   ├── utils/              # Validaciones y helpers
+│   ├── hooks/              # Hooks personalizados
 │   └── App.tsx             # Configuración de rutas principales
 │
+├── android/                # Proyecto Android (generado con Capacitor)
+├── ios/                    # Proyecto iOS (generado con Capacitor)
 ├── capacitor.config.ts     # Configuración de Capacitor
-├── firebaseConfig.ts       # Inicialización de Firebase
+├── tailwind.config.ts      # Configuración de Tailwind
+├── vite.config.ts          # Configuración de Vite + alias
 └── package.json            # Dependencias del proyecto
 ```
 
 ---
 
-## ⚙️ 7. Instalación y configuración
+## 🚀 Características principales
+
+✅ **Autenticación segura** con Firebase Authentication (correo y contraseña).  
+✅ **Formulario de denuncia** con validación en tiempo real.  
+✅ **Captura o selección de imágenes** mediante API nativa de cámara.  
+✅ **Geolocalización automática** con Capacitor Geolocation.  
+✅ **Historial de denuncias** consultable por usuario.  
+✅ **Modo claro/oscuro** con sistema de temas dinámico.  
+✅ **Diseño responsivo** compatible con Android e iOS.  
+✅ **Sincronización en la nube** mediante Firestore.  
+✅ **Soporte offline (futuro)** para registrar denuncias sin conexión.
+
+---
+
+## 🧩 Flujo de Navegación
+
+```
+[Login / Registro]
+       ↓
+[Inicio Principal]
+   ├── Nueva Denuncia → [Formulario → Confirmación]
+   ├── Historial → [Detalle de Denuncia]
+   └── Acerca de / Configuración
+```
+
+---
+
+## 🧭 Arquitectura
+
+El proyecto sigue una **arquitectura modular basada en componentes**, con un enfoque **MVVM simplificado**:
+
+```
+UI (React + Ionic)
+│
+├── Hooks personalizados → Manejo de lógica y estado
+├── Stores (Zustand) → Estados globales y sincronización
+└── Services (Firebase) → Lógica de datos y acceso nativo
+```
+
+Esta estructura permite **escalabilidad**, **legibilidad** y **fácil mantenimiento**.
+
+---
+
+## ⚒️ Instalación y Ejecución
 
 ### 1️⃣ Clonar el repositorio
+
 ```bash
 git clone https://github.com/usuario/yo-denuncio.git
 cd yo-denuncio
 ```
 
 ### 2️⃣ Instalar dependencias
+
 ```bash
 npm install
 ```
 
 ### 3️⃣ Configurar Firebase
+
 Crea el archivo `firebaseConfig.ts` en `/src` con tus credenciales:
 
-```typescript
+```ts
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -146,53 +129,59 @@ const firebaseConfig = {
   projectId: "TU_PROJECT_ID",
   storageBucket: "TU_BUCKET.appspot.com",
   messagingSenderId: "TU_MESSAGING_ID",
-  appId: "TU_APP_ID"
+  appId: "TU_APP_ID",
 };
 
 export const app = initializeApp(firebaseConfig);
 ```
 
-### 4️⃣ Ejecutar el proyecto
+### 4️⃣ Ejecutar el proyecto en web
+
 ```bash
 ionic serve
 ```
 
-### 5️⃣ Compilar para Android/iOS
+### 5️⃣ Ejecutar en Android o iOS
+
 ```bash
-ionic capacitor build android
-ionic capacitor build ios
+npx cap sync
+ionic capacitor run android
+ionic capacitor run ios
 ```
 
----
-
-## 🧾 8. Licencia
-
-Este proyecto se desarrolla con fines **académicos y educativos** bajo licencia **MIT**, permitiendo su libre uso y modificación con reconocimiento a los autores.
+Para dispositivos físicos, asegúrate de tener conectado el dispositivo y habilitada la depuración USB.
 
 ---
 
-## 👨‍💻 9. Autores
+## 💡 Futuras Mejoras
+
+- Denuncias anónimas.
+- Chat directo con autoridades.
+- Mapas de calor e informes estadísticos.
+- Integración con notificaciones push.
+- Sincronización offline.
+- Soporte multilenguaje.
+
+---
+
+## 👥 Autores
 
 **Proyecto desarrollado por:**
 
-- 🧑‍💻 **Jaiber Arrieta Guevara**  
+- 🧑‍💻 **Jaiber Arrieta Guevara**
 - 🧑‍💻 **Miguel Augusto Rojas Hernández**
 
-**Universidad:** Institución Universitaria Politécnico Grancolombiano 
-**Curso:** Énfasis en programación móvil  
+**Institución:** Politécnico Grancolombiano  
+**Curso:** Énfasis en Programación Móvil  
 **Año:** 2025  
-**Versión:** 1.0.0
+**Versión:** 1.1.0
 
 ---
 
-## 💡 10. Futuras mejoras
+## ⚖️ Licencia
 
-- Implementar **denuncias anónimas**.  
-- Integrar **chat directo** con entidades de seguridad.  
-- Añadir **estadísticas** y **mapas de calor**.  
-- Soporte **multilenguaje**.  
-- Implementar **modo oscuro / claro**.  
+Este proyecto está bajo la licencia **MIT**, permitiendo su libre uso, modificación y distribución con atribución a los autores originales.
 
 ---
 
-> “YoDenuncio: tecnología ciudadana para una comunidad más segura.”
+> “YoDenuncio: tecnología ciudadana para una comunidad más segura.” 🚨
