@@ -2,7 +2,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IonContent, IonPage } from "@ionic/react";
+import { IonContent, IonImg, IonPage } from "@ionic/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -48,7 +48,11 @@ export default function Register() {
             <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
               Regístrate
             </h1>
-
+            <IonImg
+              src="./src/assets/images/Logo.png"
+              alt="Logo YoDenuncio"
+              className="mx-auto mb-12 w-42 h-42 object-contain"
+            />
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Input
                 label="Nombre completo"
