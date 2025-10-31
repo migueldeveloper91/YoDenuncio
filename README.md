@@ -1,4 +1,6 @@
-# 📱 YoDenuncio – Aplicación Móvil de Participación Ciudadana
+<img src="./src/assets/images/LogoYodenuncio.png" alt="Logo YoDenuncio" width="200">
+
+# 📱 Aplicación Móvil de Participación Ciudadana
 
 **YoDenuncio** es una aplicación móvil multiplataforma desarrollada con **Ionic + React + Firebase**, cuyo propósito es facilitar la **denuncia ciudadana de hechos delictivos, irregularidades o situaciones de riesgo** desde cualquier dispositivo móvil.  
 El objetivo principal es brindar a los usuarios una herramienta **ágil, confiable y segura** para reportar incidentes que afecten la convivencia o seguridad en su entorno.
