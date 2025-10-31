@@ -1,9 +1,11 @@
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import { loginUser } from "@/services/firebaseAuth";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IonContent, IonImg, IonPage } from "@ionic/react";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -21,9 +23,18 @@ export default function Login() {
   } = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
   });
+  const history = useHistory();
 
-  const onSubmit = (data: LoginData) => {
-    console.log("Datos de login:", data);
+  const onSubmit = async (data: LoginData) => {
+    try {
+      const user = await loginUser(data.email, data.password);
+      console.log("Sesión iniciada:", user);
+      alert("Bienvenido " + user.email);
+      history.push("/tabs"); // 👈 redirige a Home
+    } catch (error: any) {
+      console.error(error);
+      alert("Error al iniciar sesión: " + error.message);
+    }
   };
 
   return (
@@ -41,7 +52,7 @@ export default function Login() {
             <IonImg
               src="./src/assets/images/Logo.png"
               alt="Logo YoDenuncio"
-              className="mx-auto mb-12 w-42 h-42 object-contain"
+              className="mx-auto mb-12 w-36 h-36 object-contain"
             />
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Input
@@ -60,7 +71,7 @@ export default function Login() {
               <Button type="submit" label="Ingresar" />
 
               <p className="text-sm text-center text-gray-500 mt-4">
-                ¿No tienes cuenta?{" "}
+                ¿No tienes cuenta?
                 <a href="/register" className="text-blue-600 font-semibold">
                   Regístrate
                 </a>

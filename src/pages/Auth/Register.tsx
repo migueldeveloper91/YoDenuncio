@@ -1,9 +1,11 @@
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import { registerUser } from "@/services/firebaseAuth";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IonContent, IonImg, IonPage } from "@ionic/react";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router";
 import { z } from "zod";
 
 // Esquema de validación con Zod
@@ -29,12 +31,18 @@ export default function Register() {
   } = useForm<RegisterData>({
     resolver: zodResolver(registerSchema),
   });
+  const history = useHistory();
 
-  const onSubmit = (data: RegisterData) => {
-    console.log("Datos de registro:", data);
-    // Aquí puedes llamar a Firebase Authentication para crear usuario
-    // ejemplo:
-    // createUserWithEmailAndPassword(auth, data.email, data.password)
+  const onSubmit = async (data: RegisterData) => {
+    try {
+      const user = await registerUser(data.email, data.password, data.fullName);
+      console.log("Usuario registrado:", user);
+      alert("Registro exitoso ✅");
+      history.push("/tabs"); // 👈 redirige a Home
+    } catch (error: any) {
+      console.error(error);
+      alert("Error al registrarse: " + error.message);
+    }
   };
 
   return (
@@ -51,7 +59,7 @@ export default function Register() {
             <IonImg
               src="./src/assets/images/Logo.png"
               alt="Logo YoDenuncio"
-              className="mx-auto mb-12 w-42 h-42 object-contain"
+              className="mx-auto mb-12 w-36 h-36 object-contain"
             />
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Input

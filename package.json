@@ -9,12 +9,16 @@
     "preview": "vite preview",
     "test.e2e": "cypress run",
     "test.unit": "vitest",
-    "lint": "eslint"
+    "lint": "eslint",
+    "android": "npx cap open android"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.4",
-    "@capacitor/cli": "^6.2.1",
-    "@capacitor/core": "^7.4.4",
+    "@capacitor/app": "7.1.0",
+    "@capacitor/core": "7.4.4",
+    "@capacitor/haptics": "7.0.2",
+    "@capacitor/keyboard": "7.0.3",
+    "@capacitor/status-bar": "7.0.3",
     "@hookform/resolvers": "^5.2.2",
     "@ionic/react": "^8.7.8",
     "@ionic/react-router": "^8.7.8",
@@ -31,6 +35,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@capacitor/cli": "7.4.4",
     "@tailwindcss/postcss": "^4.1.16",
     "@testing-library/dom": ">=7.21.4",
     "@testing-library/jest-dom": "^5.16.5",

@@ -1,3 +1,4 @@
+// src/pages/Home.tsx
 import {
   IonContent,
   IonHeader,
@@ -6,17 +7,15 @@ import {
   IonToolbar,
 } from "@ionic/react";
 
-export default function Home() {
-  console.log("HOME");
-
+export default function Alerts() {
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Inicio</IonTitle>
+          <IonTitle>Alerts</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">Contenido de inicio</IonContent>
+      <IonContent className="ion-padding">Contenido de Alerts</IonContent>
     </IonPage>
   );
 }
