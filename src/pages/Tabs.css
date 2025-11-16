@@ -1,0 +1,70 @@
+/* Tab Bar Simple Style */
+.simple-tab-bar {
+  --background: #ffffff;
+  --border: none;
+  border-top: 1px solid #e5e7eb;
+  height: 56px;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* Tab Buttons */
+.simple-tab-button {
+  --color: #9ca3af;
+  --color-selected: #111827;
+  max-width: none;
+  flex: 1;
+  padding: 12px 8px;
+}
+
+.simple-tab-button ion-icon {
+  display: none !important;
+}
+
+.simple-tab-button.tab-selected {
+  --color: #111827;
+}
+
+/* Tab Labels */
+.tab-label {
+  font-size: 14px;
+  margin: 0 !important;
+  text-transform: none;
+  font-weight: normal;
+  color: #9ca3af;
+  display: block;
+  margin-top: 0 !important;
+  text-decoration: none !important;
+}
+
+.simple-tab-button.tab-selected .tab-label {
+  font-weight: 600;
+  color: #111827 !important;
+  text-decoration: none !important;
+}
+
+/* Alerts Tab Container */
+.alerts-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Notification Badge */
+.notification-badge {
+  position: absolute;
+  top: -10px;
+  right: -16px;
+  background-color: #ef4444;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}

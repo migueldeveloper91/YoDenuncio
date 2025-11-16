@@ -1,0 +1,68 @@
+/* Logout Alert Styles */
+.logout-alert {
+  --backdrop-opacity: 0.8;
+}
+
+.logout-alert .alert-wrapper {
+  border-radius: 16px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  background: #ffffff;
+}
+
+.logout-alert .alert-head {
+  padding: 24px 24px 16px;
+  background: linear-gradient(to right, #fb923c, #f97316);
+}
+
+.logout-alert .alert-title {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.logout-alert .alert-message {
+  padding: 16px 24px 24px;
+  color: #374151;
+  font-size: 15px;
+  text-align: center;
+  line-height: 1.6;
+  background: #ffffff;
+}
+
+.logout-alert .alert-button-group {
+  padding: 0;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+}
+
+.logout-alert .alert-button {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  height: 56px;
+  font-size: 16px;
+  font-weight: 600;
+  flex: 1;
+}
+
+.logout-alert .alert-button-cancel {
+  color: #6b7280;
+  background: #f9fafb;
+  border-right: 1px solid #e5e7eb;
+}
+
+.logout-alert .alert-button-cancel:hover {
+  background: #f3f4f6;
+}
+
+.logout-alert .alert-button-confirm {
+  color: #ffffff;
+  background: #ef4444;
+}
+
+.logout-alert .alert-button-confirm:hover {
+  background: #dc2626;
+}

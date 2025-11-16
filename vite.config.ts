@@ -10,4 +10,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
+  server: {
+    host: true,        // ← Permite acceso externo desde emuladores/dispositivos
+    port: 5173,        // ← Puerto fijo (recomendado para Capacitor)
+    strictPort: true,  // ← Si el puerto está ocupado, Vite no buscará otro
+  },
 });
