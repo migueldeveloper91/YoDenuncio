@@ -7,6 +7,7 @@ import { IonContent, IonImg, IonPage } from "@ionic/react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
 import { z } from "zod";
+import logo from "@/assets/images/Logo.png";
 
 // Esquema de validación con Zod
 const registerSchema = z
@@ -57,7 +58,8 @@ export default function Register() {
               Regístrate
             </h1>
             <IonImg
-              src="./src/assets/images/Logo.png"
+              // src="./src/assets/images/Logo.png"
+              src={logo}
               alt="Logo YoDenuncio"
               className="mx-auto mb-12 w-36 h-36 object-contain"
             />

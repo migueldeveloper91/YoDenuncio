@@ -7,6 +7,8 @@ import { IonContent, IonImg, IonPage } from "@ionic/react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
 import { z } from "zod";
+import logo from "@/assets/images/Logo.png";
+
 
 const loginSchema = z.object({
   email: z.string().email("Correo inválido"),
@@ -29,7 +31,7 @@ export default function Login() {
     try {
       const user = await loginUser(data.email, data.password);
       console.log("Sesión iniciada:", user);
-      alert("Bienvenido " + user.email);
+      alert("Bienvenido " + user.displayName + " ✅");
       history.push("/tabs"); // 👈 redirige a Home
     } catch (error: any) {
       console.error(error);
@@ -50,7 +52,8 @@ export default function Login() {
               Inicia Sesión
             </h1>
             <IonImg
-              src="./src/assets/images/Logo.png"
+              // src="./src/assets/images/Logo.png"
+              src={logo}
               alt="Logo YoDenuncio"
               className="mx-auto mb-12 w-36 h-36 object-contain"
             />

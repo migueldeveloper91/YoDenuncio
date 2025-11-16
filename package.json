@@ -10,7 +10,10 @@
     "test.e2e": "cypress run",
     "test.unit": "vitest",
     "lint": "eslint",
-    "android": "npx cap open android"
+    "android:dev": "vite --host 0.0.0.0",
+    "android:sync": "npx cap sync android",
+    "android:run": "npx cap run android -l --external",
+    "android:open": "npx cap open android"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.4",
