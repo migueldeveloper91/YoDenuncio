@@ -12,7 +12,7 @@ import { addCircle, alertCircle, home, person } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 
-import Alerts from "./Alerts";
+import Alerts from "./Alerts/Alerts";
 import NewReport from "./CreateComplaint/index";
 import Home from "./Home/Home";
 import Profile from "./Profile/Profile";
