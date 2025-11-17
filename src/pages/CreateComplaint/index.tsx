@@ -5,13 +5,8 @@ import {
   IonCardSubtitle,
   IonContent,
   IonHeader,
-  IonInput,
   IonItem,
-  IonLabel,
   IonPage,
-  IonSelect,
-  IonSelectOption,
-  IonTextarea,
   IonTitle,
   IonToolbar,
   useIonToast,
@@ -26,6 +21,9 @@ import useUserStore from "@/stores/userStore";
 
 import LocationPicker from "@/components/LocationPicker";
 import Button from "@/components/ui/Button";
+import CategorySelector from "@/components/ui/CategorySelector";
+import Input from "@/components/ui/Input";
+import TextArea from "@/components/ui/TextArea";
 import { uploadImages } from "@/utils/uploadImages";
 import { useState } from "react";
 
@@ -39,6 +37,7 @@ export default function CreateComplaint() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<ComplaintForm>({
     resolver: zodResolver(complaintSchema),
@@ -92,41 +91,33 @@ export default function CreateComplaint() {
 
           <IonCardContent className="mt-4">
             {/* Título */}
+            <div>
+              <Input
+                label="Título"
+                placeholder="Ingresa un título"
+                {...register("title")}
+                error={errors.title?.message}
+              />
+            </div>
 
-            <IonInput
-              {...register("title")}
-              fill="outline"
-              label="Título"
-              labelPlacement="floating"
-            />
-
-            {errors.title && (
-              <p className="text-red-600">{errors.title.message}</p>
-            )}
-
-            {/* Descripción */}
-            <IonItem>
-              <IonLabel position="stacked">Descripción</IonLabel>
-              <IonTextarea autoGrow {...register("description")} />
-            </IonItem>
-            {errors.description && (
-              <p className="text-red-600">{errors.description.message}</p>
-            )}
+            <div>
+              {/* Descripción */}
+              <TextArea
+                label="Descripción"
+                placeholder="Describe lo que ocurrió..."
+                {...register("description")}
+                error={errors.description?.message}
+              />
+            </div>
 
             {/* Categoría */}
-            <IonItem>
-              <IonLabel position="stacked">Categoría</IonLabel>
-              <IonSelect
-                onIonChange={(e) => setValue("categoria", e.detail.value)}
-              >
-                <IonSelectOption value="robo">Robo</IonSelectOption>
-                <IonSelectOption value="violencia">Violencia</IonSelectOption>
-                <IonSelectOption value="accidente">Accidente</IonSelectOption>
-              </IonSelect>
-            </IonItem>
-            {errors.categoria && (
-              <p className="text-red-600">{errors.categoria.message}</p>
-            )}
+
+            <CategorySelector
+              label="Categoría"
+              value={watch("categoria")}
+              error={errors.categoria?.message}
+              onChange={(value) => setValue("categoria", value)}
+            />
           </IonCardContent>
         </IonCard>
 
