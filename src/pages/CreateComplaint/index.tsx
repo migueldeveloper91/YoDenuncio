@@ -129,17 +129,23 @@ export default function CreateComplaint() {
         </IonCard>
 
         {/* Imágenes */}
-        <IonItem>
-          <IonLabel position="stacked">Imágenes</IonLabel>
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={(e) =>
-              setValue("images", Array.from(e.target.files || []))
-            }
-          />
-        </IonItem>
+        <IonCard className="m-4 rounded-lg p-4">
+          <IonCardHeader>
+            <IonCardSubtitle>2) Evidencia</IonCardSubtitle>
+          </IonCardHeader>
+
+          <IonCardContent className="mt-4">
+            <IonLabel position="stacked">Imágenes</IonLabel>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={(e) =>
+                setValue("images", Array.from(e.target.files || []))
+              }
+            />
+          </IonCardContent>
+        </IonCard>
 
         <IonCard className="m-4 rounded-lg p-4">
           <IonCardHeader>
