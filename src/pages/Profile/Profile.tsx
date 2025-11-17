@@ -1,17 +1,23 @@
 // src/pages/Profile.tsx
-import {
-  IonContent,
-  IonPage,
-  IonIcon,
-  IonToast,
-  IonAlert,
-} from "@ionic/react";
-import { pencil, informationCircle, helpCircle, logOut } from "ionicons/icons";
-import { useState } from "react";
-import { useHistory } from "react-router";
+import Button from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 import { logoutUser } from "@/services/firebaseAuth";
+import {
+  IonAlert,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonPage,
+  IonTitle,
+  IonToast,
+  IonToolbar,
+} from "@ionic/react";
+import { helpCircle, informationCircle, logOut, pencil } from "ionicons/icons";
+import { useState } from "react";
+import { useHistory } from "react-router";
 import "./Profile.css";
+// Import package.json to display the real app version
+import packageJson from "../../../package.json";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -42,28 +48,32 @@ export default function Profile() {
   const getMemberSinceDate = () => {
     if (user?.metadata?.creationTime) {
       const date = new Date(user.metadata.creationTime);
-      return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+      return `${date.getDate().toString().padStart(2, "0")}/${(
+        date.getMonth() + 1
+      )
+        .toString()
+        .padStart(2, "0")}/${date.getFullYear()}`;
     }
     return "15/01/2025";
   };
 
   return (
     <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Mi perfil</IonTitle>
+        </IonToolbar>
+      </IonHeader>
       <IonContent className="ion-no-padding bg-gray-100">
-        {/* Header */}
-        <div className="bg-white px-6 pt-12 pb-4">
-          <h1 className="text-2xl font-bold text-gray-800">Mi perfil</h1>
-        </div>
-
         {/* Profile Card */}
         <div className="px-6 py-4">
           <div className="bg-white rounded-3xl p-6 shadow-sm">
             {/* Profile Image and Info */}
             <div className="text-center mb-6">
               <div className="relative inline-block">
-                <img 
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" 
-                  alt="Profile" 
+                <img
+                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+                  alt="Profile"
                   className="w-20 h-20 rounded-full object-cover mx-auto"
                 />
               </div>
@@ -77,9 +87,13 @@ export default function Profile() {
           </div>
 
           {/* Member Since Card */}
-          <div className="bg-gradient-to-r from-orange-400 to-orange-500 rounded-2xl p-6 mt-4 shadow-sm">
-            <p className="text-orange-100 text-sm font-medium mb-1">Miembro desde</p>
-            <p className="text-white text-2xl font-bold">{getMemberSinceDate()}</p>
+          <div className="bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-secondary-dark)] rounded-2xl p-6 mt-4 shadow-sm">
+            <p className="text-orange-100 text-sm font-medium mb-1">
+              Miembro desde
+            </p>
+            <p className="text-white text-2xl font-bold">
+              {getMemberSinceDate()}
+            </p>
           </div>
 
           {/* Menu Options */}
@@ -99,9 +113,14 @@ export default function Profile() {
             <button className="w-full bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center">
                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                  <IonIcon icon={informationCircle} className="text-blue-600 text-sm" />
+                  <IonIcon
+                    icon={informationCircle}
+                    className="text-blue-600 text-sm"
+                  />
                 </div>
-                <span className="text-gray-800 font-medium">Acerca de YoDenuncio</span>
+                <span className="text-gray-800 font-medium">
+                  Acerca de YoDenuncio
+                </span>
               </div>
               <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
             </button>
@@ -110,9 +129,14 @@ export default function Profile() {
             <button className="w-full bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center">
                 <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center mr-4">
-                  <IonIcon icon={helpCircle} className="text-pink-600 text-sm" />
+                  <IonIcon
+                    icon={helpCircle}
+                    className="text-pink-600 text-sm"
+                  />
                 </div>
-                <span className="text-gray-800 font-medium">Ayuda y soporte</span>
+                <span className="text-gray-800 font-medium">
+                  Ayuda y soporte
+                </span>
               </div>
               <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
             </button>
@@ -120,19 +144,19 @@ export default function Profile() {
 
           {/* Logout Button */}
           <div className="mt-8 mb-8">
-            <button
+            <Button
               onClick={() => setShowLogoutAlert(true)}
-              disabled={isLoading}
-              className="w-full bg-red-500 text-white py-4 rounded-2xl font-semibold hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-sm"
-            >
-              <IonIcon icon={logOut} className="text-lg" />
-              {isLoading ? "Cerrando sesión..." : "Cerrar sesión"}
-            </button>
+              type="submit"
+              label="Cerrar sesión"
+              variant="danger"
+              icon={logOut}
+              isLoading={isLoading}
+            />
           </div>
 
           {/* Version */}
           <div className="text-center mb-6">
-            <p className="text-gray-400 text-sm">v1.0.0</p>
+            <p className="text-gray-400 text-sm">V {packageJson.version}</p>
           </div>
         </div>
 
@@ -145,14 +169,14 @@ export default function Profile() {
           message="¿Estás seguro de que deseas cerrar sesión?"
           buttons={[
             {
-              text: 'Cancelar',
-              role: 'cancel',
-              cssClass: 'alert-button-cancel',
+              text: "Cancelar",
+              role: "cancel",
+              cssClass: "alert-button-cancel",
             },
             {
-              text: 'Cerrar sesión',
-              role: 'confirm',
-              cssClass: 'alert-button-confirm',
+              text: "Cerrar sesión",
+              role: "confirm",
+              cssClass: "alert-button-confirm",
               handler: () => {
                 handleLogout();
               },

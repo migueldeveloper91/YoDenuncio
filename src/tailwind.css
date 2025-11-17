@@ -1,1 +1,68 @@
 @import "tailwindcss";
+
+/* --- FIX: Tailwind 4 reset breaking Ionic Tabs --- */
+
+ion-input {
+  --border-radius: 26px !important;
+  --border-color: #d1d5db;
+  --highlight-color: var(--color-primary); /* color al enfocar */
+  --padding-start: 26px;
+  --padding-end: 26px;
+}
+
+ion-tab-bar {
+  --background: var(--ion-color-light, #fff);
+  --color: var(--ion-color-medium, #666);
+  --color-selected: var(--ion-color-primary, #3880ff);
+
+  background: var(--background);
+  border-top: 1px solid var(--ion-color-step-150, #e5e5e5);
+}
+
+ion-tab-button {
+  text-decoration: none !important;
+  background: transparent !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 0 !important;
+}
+
+ion-tab-button ion-icon {
+  font-size: 22px !important;
+}
+
+ion-tab-button ion-label {
+  font-size: 12px !important;
+  margin-top: 2px;
+}
+
+ion-tab-button ion-badge {
+  position: absolute;
+  top: 2px;
+  right: 12px;
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 50%;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:root {
+  --color-primary: #2b7ae4;
+  --color-primary-dark: #1b5db3;
+
+  --color-secondary: #f5a623;
+  --color-secondary-dark: #c9871c;
+
+  --color-danger: #e53935;
+  --color-danger-dark: #b42a27;
+
+  --color-success: #2e7d32;
+  --color-success-dark: #1d5820;
+}

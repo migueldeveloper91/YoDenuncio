@@ -1,9 +1,15 @@
 import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "com.tuempresa.yodenuncio",
+  appId: "com.codigoconproposito.yodenuncio",
   appName: "YoDenuncio",
-  webDir: "dist", // o 'build' si usas otra carpeta de salida
+  webDir: "dist",
+
+  plugins: {
+    GoogleMaps: {
+      apiKey: "AIzaSyCP32R8QUUoOqYvvHRXylJ7FIVuaEYSkIQ", // 👈 agrega tu API KEY de Maps aquí
+    },
+  },
 };
 
 export default config;

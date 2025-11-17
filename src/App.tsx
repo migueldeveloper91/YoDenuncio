@@ -6,8 +6,6 @@ import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Tabs from "./pages/Tabs";
 
-import "@ionic/react/css/core.css";
-
 function App() {
   return (
     <IonApp>

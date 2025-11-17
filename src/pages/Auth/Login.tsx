@@ -2,13 +2,12 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { loginUser } from "@/services/firebaseAuth";
 
+import logo from "@/assets/images/Logo.png";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IonContent, IonImg, IonPage } from "@ionic/react";
+import { IonContent, IonImg, IonPage, useIonToast } from "@ionic/react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
 import { z } from "zod";
-import logo from "@/assets/images/Logo.png";
-
 
 const loginSchema = z.object({
   email: z.string().email("Correo inválido"),
@@ -18,6 +17,7 @@ const loginSchema = z.object({
 type LoginData = z.infer<typeof loginSchema>;
 
 export default function Login() {
+  const [present] = useIonToast();
   const {
     register,
     handleSubmit,
@@ -30,12 +30,20 @@ export default function Login() {
   const onSubmit = async (data: LoginData) => {
     try {
       const user = await loginUser(data.email, data.password);
-      console.log("Sesión iniciada:", user);
-      alert("Bienvenido " + user.displayName + " ✅");
+      present({
+        message: "Bienvenido " + user.displayName + " ✅",
+        duration: 1500,
+        position: "top",
+      });
       history.push("/tabs"); // 👈 redirige a Home
-    } catch (error: any) {
-      console.error(error);
-      alert("Error al iniciar sesión: " + error.message);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Error desconocido";
+      present({
+        message: "Error al iniciar sesión: " + errorMessage,
+        duration: 1500,
+        position: "top",
+      });
     }
   };
 
@@ -47,7 +55,7 @@ export default function Login() {
       >
         {/* Contenedor que asegura centrado vertical y horizontal */}
         <div className="flex flex-col justify-center items-center min-h-screen w-full">
-          <div className="w-full max-w-sm p-6 bg-white rounded-2xl shadow-md">
+          <div className="w-full p-6 bg-white ">
             <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
               Inicia Sesión
             </h1>
@@ -71,10 +79,10 @@ export default function Login() {
                 error={errors.password?.message}
               />
 
-              <Button type="submit" label="Ingresar" />
+              <Button type="submit" label="Ingresar" variant="primary" />
 
-              <p className="text-sm text-center text-gray-500 mt-4">
-                ¿No tienes cuenta?
+              <p className="text-md text-center text-gray-500 mt-4">
+                ¿No tienes cuenta?{" "}
                 <a href="/register" className="text-blue-600 font-semibold">
                   Regístrate
                 </a>

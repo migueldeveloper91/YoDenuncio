@@ -1,0 +1,19 @@
+/* TabItem active state styles */
+.tab-icon {
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.tab-label {
+  transition: color 0.3s ease;
+}
+
+/* When the tab is selected, Ionic adds .tab-selected class to IonTabButton */
+ion-tab-button.tab-selected .tab-icon {
+  color: #2b7ae4;
+}
+
+ion-tab-button.tab-selected .tab-label {
+  color: #2b7ae4;
+  font-weight: 600;
+}

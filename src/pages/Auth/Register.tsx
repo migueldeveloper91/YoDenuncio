@@ -2,12 +2,12 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { registerUser } from "@/services/firebaseAuth";
 
+import logo from "@/assets/images/Logo.png";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IonContent, IonImg, IonPage } from "@ionic/react";
+import { IonContent, IonImg, IonPage, useIonToast } from "@ionic/react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
 import { z } from "zod";
-import logo from "@/assets/images/Logo.png";
 
 // Esquema de validación con Zod
 const registerSchema = z
@@ -25,6 +25,7 @@ const registerSchema = z
 type RegisterData = z.infer<typeof registerSchema>;
 
 export default function Register() {
+  const [present] = useIonToast();
   const {
     register,
     handleSubmit,
@@ -38,11 +39,23 @@ export default function Register() {
     try {
       const user = await registerUser(data.email, data.password, data.fullName);
       console.log("Usuario registrado:", user);
-      alert("Registro exitoso ✅");
+
+      present({
+        message: "Registro exitoso ✅",
+        duration: 1500,
+        position: "top",
+      });
+
       history.push("/tabs"); // 👈 redirige a Home
-    } catch (error: any) {
-      console.error(error);
-      alert("Error al registrarse: " + error.message);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Error desconocido";
+
+      present({
+        message: "Error al registrarse: " + errorMessage,
+        duration: 1500,
+        position: "top",
+      });
     }
   };
 
@@ -53,7 +66,7 @@ export default function Register() {
         className="flex items-center justify-center bg-gray-100"
       >
         <div className="flex flex-col justify-center items-center min-h-screen w-full">
-          <div className="w-full max-w-sm p-6 bg-white rounded-2xl shadow-md">
+          <div className="w-full p-6 ">
             <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
               Regístrate
             </h1>
@@ -89,9 +102,9 @@ export default function Register() {
                 error={errors.confirmPassword?.message}
               />
 
-              <Button type="submit" label="Crear cuenta" />
+              <Button type="submit" label="Crear cuenta" variant="primary" />
 
-              <p className="text-sm text-center text-gray-500 mt-4">
+              <p className="text-md text-center text-gray-500 mt-4">
                 ¿Ya tienes cuenta?{" "}
                 <a href="/login" className="text-blue-600 font-semibold">
                   Inicia sesión

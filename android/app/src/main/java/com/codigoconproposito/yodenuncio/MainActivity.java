@@ -1,4 +1,4 @@
-package com.tuempresa.yodenuncio;
+package com.codigoconproposito.yodenuncio;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -11,8 +11,8 @@ export default defineConfig({
     },
   },
   server: {
-    host: true,        // ← Permite acceso externo desde emuladores/dispositivos
-    port: 5173,        // ← Puerto fijo (recomendado para Capacitor)
-    strictPort: true,  // ← Si el puerto está ocupado, Vite no buscará otro
+    host: "192.168.0.14", // ← Permite acceso externo desde emuladores/dispositivos
+    port: 3000, // ← Puerto fijo (recomendado para Capacitor)
+    strictPort: true, // ← Si el puerto está ocupado, Vite no buscará otro
   },
 });
