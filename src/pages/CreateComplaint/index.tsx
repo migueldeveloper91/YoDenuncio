@@ -27,11 +27,13 @@ import useUserStore from "@/stores/userStore";
 import LocationPicker from "@/components/LocationPicker";
 import Button from "@/components/ui/Button";
 import { uploadImages } from "@/utils/uploadImages";
+import { useState } from "react";
 
 export default function CreateComplaint() {
   const { createComplaint } = useComplaintsStore();
   const user = useUserStore((s) => s.user);
   const [present] = useIonToast();
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
 
   const {
     register,
@@ -129,21 +131,51 @@ export default function CreateComplaint() {
         </IonCard>
 
         {/* Imágenes */}
+        {/* Imágenes */}
         <IonCard className="m-4 rounded-lg p-4">
           <IonCardHeader>
             <IonCardSubtitle>2) Evidencia</IonCardSubtitle>
           </IonCardHeader>
 
-          <IonCardContent className="mt-4">
-            <IonLabel position="stacked">Imágenes</IonLabel>
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={(e) =>
-                setValue("images", Array.from(e.target.files || []))
-              }
+          <IonCardContent className="mt-2">
+            {/* Botón bonito */}
+            <Button
+              label="📸 Añadir foto"
+              onClick={() => document.getElementById("imagePicker")?.click()}
+              variant="secondary"
             />
+
+            {/* Input oculto */}
+            <input
+              id="imagePicker"
+              type="file"
+              accept="image/*"
+              multiple
+              hidden
+              onChange={(e) => {
+                const files = Array.from(e.target.files || []);
+                setValue("images", files);
+                setPreviewImages(
+                  files.map((file) => URL.createObjectURL(file))
+                );
+              }}
+            />
+
+            {/* Previsualización */}
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              {previewImages.map((src, index) => (
+                <div
+                  key={index}
+                  className="w-full h-24 rounded overflow-hidden border"
+                >
+                  <img
+                    src={src}
+                    className="object-cover w-full h-full"
+                    alt={`evidencia-${index}`}
+                  />
+                </div>
+              ))}
+            </div>
           </IonCardContent>
         </IonCard>
 
