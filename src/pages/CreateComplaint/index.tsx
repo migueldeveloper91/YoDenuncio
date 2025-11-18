@@ -25,13 +25,14 @@ import CategorySelector from "@/components/ui/CategorySelector";
 import Input from "@/components/ui/Input";
 import TextArea from "@/components/ui/TextArea";
 import { uploadImages } from "@/utils/uploadImages";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function CreateComplaint() {
   const { createComplaint } = useComplaintsStore();
   const user = useUserStore((s) => s.user);
   const [present] = useIonToast();
   const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [loadingLocation, setLoadingLocation] = useState(true);
 
   const {
     register,
@@ -43,16 +44,74 @@ export default function CreateComplaint() {
     resolver: zodResolver(complaintSchema),
   });
 
+  // Obtener ubicación automáticamente al cargar
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setValue("lat", position.coords.latitude);
+          setValue("lng", position.coords.longitude);
+          setLoadingLocation(false);
+        },
+        (error) => {
+          console.error("Error obteniendo ubicación:", error);
+          present({
+            message: "No se pudo obtener tu ubicación automáticamente. Por favor selecciona una en el mapa.",
+            duration: 3000,
+            position: "top",
+            color: "warning",
+          });
+          setLoadingLocation(false);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        }
+      );
+    } else {
+      setLoadingLocation(false);
+      present({
+        message: "Geolocalización no disponible. Por favor selecciona una ubicación en el mapa.",
+        duration: 3000,
+        position: "top",
+        color: "warning",
+      });
+    }
+  }, [setValue, present]);
+
   const onSubmit = async (data: ComplaintForm) => {
     try {
-      // 1. Subir imágenes
+      // Validar que el usuario esté autenticado
+      if (!user || !user.id) {
+        present({
+          message: "Debes iniciar sesión para crear una denuncia",
+          duration: 2500,
+          position: "top",
+          color: "danger",
+        });
+        return;
+      }
+
+      // Validar que haya ubicación
+      if (!data.lat || !data.lng) {
+        present({
+          message: "Debes seleccionar una ubicación en el mapa",
+          duration: 2000,
+          position: "top",
+          color: "warning",
+        });
+        return;
+      }
+      
+      // Subir imágenes
       const imageUrls = data.images
         ? await uploadImages(data.images as File[])
         : [];
 
-      // 2. Guardar denuncia
+      // Guardar denuncia
       await createComplaint({
-        userId: user!.id,
+        userId: user.id,
         title: data.title,
         description: data.description,
         categoria: data.categoria,
@@ -64,14 +123,16 @@ export default function CreateComplaint() {
         message: "Denuncia creada exitosamente",
         duration: 1500,
         position: "top",
+        color: "success",
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error desconocido";
 
       present({
         message: "Error al crear la denuncia: " + message,
-        duration: 1500,
+        duration: 2500,
         position: "top",
+        color: "danger",
       });
     }
   };
@@ -172,16 +233,33 @@ export default function CreateComplaint() {
 
         <IonCard className="m-4 rounded-lg p-4">
           <IonCardHeader>
-            <IonCardSubtitle>3) Ubicación</IonCardSubtitle>
+            <IonCardSubtitle>
+              3) Ubicación {loadingLocation && "(Obteniendo ubicación...)"}
+            </IonCardSubtitle>
           </IonCardHeader>
 
           <IonCardContent className="mt-4">
+            {errors.lat && (
+              <p className="text-red-500 text-sm mb-2">
+                ⚠️ {errors.lat.message}
+              </p>
+            )}
             <LocationPicker
               onChange={(coords) => {
                 setValue("lat", coords.lat);
                 setValue("lng", coords.lng);
               }}
+              initialLocation={
+                watch("lat") && watch("lng")
+                  ? { lat: watch("lat")!, lng: watch("lng")! }
+                  : undefined
+              }
             />
+            {watch("lat") && watch("lng") && (
+              <p className="text-sm text-gray-600 mt-2">
+                📍 Ubicación: {watch("lat")?.toFixed(6)}, {watch("lng")?.toFixed(6)}
+              </p>
+            )}
           </IonCardContent>
         </IonCard>
 

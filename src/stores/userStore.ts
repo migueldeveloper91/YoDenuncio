@@ -54,12 +54,11 @@ onAuthStateChanged(auth, async (firebaseUser) => {
 
   if (firebaseUser) {
     await store.syncUserWithFirestore(firebaseUser);
-    setTimeout(() => store.setUser(store.user), 0);
   } else {
     store.clearUser();
   }
 
-  store.loadingUser = false;
+  useUserStore.setState({ loadingUser: false });
 });
 
 export default useUserStore;
