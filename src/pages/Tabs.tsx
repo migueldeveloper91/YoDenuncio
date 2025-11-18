@@ -12,6 +12,7 @@ import { addCircle, alertCircle, home, person } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 
+import { useComplaintsStore } from "@/stores/useComplaintsStore";
 import Alerts from "./Alerts/Alerts";
 import NewReport from "./CreateComplaint/index";
 import Home from "./Home/Home";
@@ -19,8 +20,11 @@ import Profile from "./Profile/Profile";
 
 export default function Tabs() {
   const [notificationCount, setNotificationCount] = useState(0);
+  const { fetchAll, all } = useComplaintsStore();
+  console.log(all);
 
   useEffect(() => {
+    fetchAll();
     setNotificationCount(2);
   }, []);
 
@@ -31,6 +35,7 @@ export default function Tabs() {
         <Route exact path="/tabs/profile" component={Profile} />
         <Route exact path="/tabs/alerts" component={Alerts} />
         <Route exact path="/tabs/new" component={NewReport} />
+
         <Route exact path="/tabs">
           <Redirect to="/tabs/home" />
         </Route>

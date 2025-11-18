@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "855653566973",
+    "project_id": "yodenuncio-c0044",
+    "storage_bucket": "yodenuncio-c0044.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855653566973:android:2fefea07e4a144035a3194",
+        "android_client_info": {
+          "package_name": "com.codigoconproposito.yodenuncio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiT71gtKrdKyd6O_s-cRu5oXxLDXWGNn0"
+        },
+        {
+          "current_key": "AIzaSyCLprqr7lqNvj_on2E8xt0ge85UU81stYg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855653566973:android:476f58bb348f4a275a3194",
+        "android_client_info": {
+          "package_name": "com.lito.yodenuncio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiT71gtKrdKyd6O_s-cRu5oXxLDXWGNn0"
+        },
+        {
+          "current_key": "AIzaSyCLprqr7lqNvj_on2E8xt0ge85UU81stYg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

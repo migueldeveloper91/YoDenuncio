@@ -4,7 +4,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { create } from "zustand";
 
 interface User {
-  id: string;
+  uid: string;
   name: string;
   email: string;
 }
@@ -13,7 +13,7 @@ interface UserStore {
   user: User | null;
   loadingUser: boolean;
   setUser: (user: User | null) => void;
-  syncUserWithFirestore: (firebaseUser: FirebaseUser) => Promise<void>;
+  syncUserWithFirestore: (firebaseUser: FirebaseUser) => Promise<User>;
   clearUser: () => void;
 }
 
@@ -32,23 +32,22 @@ const useUserStore = create<UserStore>((set) => ({
     let userData: User;
 
     if (!snap.exists()) {
-      // Crear usuario en Firestore la primera vez
       userData = {
-        id: firebaseUser.uid,
+        uid: firebaseUser.uid,
         name: firebaseUser.displayName ?? "",
         email: firebaseUser.email ?? "",
       };
-
       await setDoc(userRef, userData);
     } else {
       userData = snap.data() as User;
     }
 
     set({ user: userData });
+    return userData;
   },
 }));
 
-//  Sincronizar auth con Zustand automáticamente
+// 🔥 Listener corregido
 onAuthStateChanged(auth, async (firebaseUser) => {
   const store = useUserStore.getState();
 
@@ -58,6 +57,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     store.clearUser();
   }
 
+  // ✔ Ahora sí se actualiza Zustand
   useUserStore.setState({ loadingUser: false });
 });
 

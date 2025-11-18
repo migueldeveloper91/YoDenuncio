@@ -1,99 +1,120 @@
+import ComplaintsSkeleton from "@/components/ComplaintsSkeleton";
+import { useComplaintsStore } from "@/stores/useComplaintsStore";
 import {
+  IonCard,
+  IonCardContent,
   IonContent,
   IonHeader,
   IonPage,
   IonTitle,
   IonToolbar,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonSpinner,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
 } from "@ionic/react";
+import { Timestamp } from "firebase/firestore";
 import { useEffect } from "react";
-import { useComplaintsStore } from "@/stores/useComplaintsStore";
-import useUserStore from "@/stores/userStore";
-import { getThumbnailUrl } from "@/utils/cloudinaryHelpers";
+import { useHistory } from "react-router-dom";
+
+// 🔥 Iconos por categoría
+const categoryEmoji: Record<string, string> = {
+  hurto: "🚨",
+  asalto: "🧨",
+  violencia: "✋",
+  acoso: "⚠️",
+  vandalismo: "🧱",
+  accidente: "🚑",
+  conduccion_peligrosa: "🏎️",
+  rinas: "🥊",
+  ruido: "🔊",
+  alumbrado: "💡",
+  basura: "🗑️",
+  via_mal_estado: "🚧",
+};
+
+// 🔤 Mejorar texto de categoría
+const formatCategory = (cat: string) => {
+  if (!cat) return "";
+  return cat.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()); // Capitaliza cada palabra
+};
 
 export default function Home() {
-  const user = useUserStore((s) => s.user);
-  const { mine: complaints, loading, fetchMine } = useComplaintsStore();
+  const { all, fetchAll, loading } = useComplaintsStore();
+  const history = useHistory();
 
   useEffect(() => {
-    if (user?.id) {
-      fetchMine(user.id);
-    }
-  }, [user?.id, fetchMine]);
+    fetchAll();
+  }, [fetchAll]);
 
-  if (loading) {
-    return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Mis Denuncias</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className="ion-padding">
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            <IonSpinner />
-          </div>
-        </IonContent>
-      </IonPage>
-    );
-  }
+  const formatDate = (ts: Timestamp | Date | null | undefined): string => {
+    if (!ts) return "";
+
+    const date = ts instanceof Timestamp ? ts.toDate() : ts;
+    return date.toLocaleDateString();
+  };
+
+  const shortText = (text: string, max = 80) =>
+    text.length > max ? text.substring(0, max) + "…" : text;
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Mis Denuncias</IonTitle>
+          <IonTitle>Denuncias recientes</IonTitle>
         </IonToolbar>
       </IonHeader>
+
       <IonContent className="ion-padding">
-        {complaints.length === 0 ? (
-          <div style={{ textAlign: 'center', marginTop: '50px' }}>
-            <p>No tienes denuncias creadas</p>
-            <p style={{ fontSize: '14px', color: 'gray' }}>
-              Crea tu primera denuncia desde la pestaña "Nueva"
-            </p>
-          </div>
-        ) : (
-          <IonList>
-            {complaints.slice(0, 10).map((complaint) => (
-              <IonCard key={complaint.id}>
-                <IonCardHeader>
-                  <IonCardTitle>{complaint.title}</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <p><strong>Categoría:</strong> {complaint.categoria}</p>
-                  <p><strong>Descripción:</strong> {complaint.description}</p>
-                  <p><strong>Ubicación:</strong> {complaint.location.lat.toFixed(4)}, {complaint.location.lng.toFixed(4)}</p>
-                  {complaint.images && complaint.images.length > 0 && (
-                    <div>
-                      <p><strong>Imágenes:</strong> {complaint.images.length}</p>
-                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
-                        {complaint.images.map((imageUrl, idx) => (
-                          <img 
-                            key={idx}
-                            src={getThumbnailUrl(imageUrl)}
-                            alt={`Evidencia ${idx + 1}`}
-                            style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  <p style={{ fontSize: '12px', color: 'gray' }}>
-                    {complaint.createdAt?.toDate?.()?.toLocaleDateString() || 'Fecha desconocida'}
-                  </p>
-                </IonCardContent>
-              </IonCard>
-            ))}
-          </IonList>
-        )}
+        {loading && <ComplaintsSkeleton count={5} />}
+
+        {!loading &&
+          all.map((c) => (
+            <IonCard
+              key={c.id}
+              button
+              onClick={() => history.push(`/complaint/${c.id}`)}
+              className="rounded-xl shadow-sm m-4"
+            >
+              <IonCardContent>
+                <div className="flex gap-4 items-center">
+                  {/* 🟦 IZQUIERDA: ICONO + CATEGORÍA EN CUADRO */}
+                  <div
+                    className="
+                      w-24                       /* ancho fijo */
+                      h-full 
+                      bg-[var(--color-secondary)] 
+                      rounded-xl 
+                      flex flex-col 
+                      items-center 
+                      justify-center 
+                      py-3
+                      shadow-sm
+                    "
+                  >
+                    <span className="text-4xl">
+                      {categoryEmoji[c.categoria] || "📌"}
+                    </span>
+
+                    <span className="text-[11px] font-medium text-center mt-2 px-2 text-black">
+                      {formatCategory(c.categoria)}
+                    </span>
+                  </div>
+
+                  {/* 🟥 DERECHA: TÍTULO + DESCRIPCIÓN + FECHA */}
+                  <div className="flex-1">
+                    <h2 className="text-lg font-bold">
+                      {shortText(c.title, 50)}
+                    </h2>
+
+                    <p className="text-gray-700 text-sm mt-1">
+                      {shortText(c.description, 90)}
+                    </p>
+
+                    <p className="text-xs text-gray-500 mt-2">
+                      📅 {formatDate(c.createdAt)}
+                    </p>
+                  </div>
+                </div>
+              </IonCardContent>
+            </IonCard>
+          ))}
       </IonContent>
     </IonPage>
   );

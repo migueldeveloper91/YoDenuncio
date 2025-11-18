@@ -3,6 +3,7 @@ import {
   addDoc,
   collection,
   getDocs,
+  orderBy,
   query,
   Timestamp,
   where,
@@ -40,12 +41,18 @@ export const useComplaintsStore = create<ComplaintsStore>((set, get) => ({
 
   fetchAll: async () => {
     set({ loading: true });
-    const snap = await getDocs(collection(db, "complaints"));
 
-    const complaints = snap.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Complaint[];
+    const q = query(collection(db, "complaints"), orderBy("createdAt", "desc"));
+
+    const snap = await getDocs(q);
+
+    const complaints = snap.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+      } as Complaint;
+    });
 
     set({ all: complaints, loading: false });
   },
@@ -68,13 +75,14 @@ export const useComplaintsStore = create<ComplaintsStore>((set, get) => ({
 
   createComplaint: async (data) => {
     const now = Timestamp.now();
+    console.log("DATA", data);
 
     const ref = await addDoc(collection(db, "complaints"), {
       ...data,
       createdAt: now,
       updatedAt: now,
     });
-
+    console.log("REF", ref);
     const newComplaint: Complaint = {
       id: ref.id,
       ...data,

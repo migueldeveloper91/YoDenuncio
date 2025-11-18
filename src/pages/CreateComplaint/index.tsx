@@ -26,6 +26,7 @@ import Input from "@/components/ui/Input";
 import TextArea from "@/components/ui/TextArea";
 import { uploadImages } from "@/utils/uploadImages";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 
 export default function CreateComplaint() {
   const { createComplaint } = useComplaintsStore();
@@ -34,14 +35,20 @@ export default function CreateComplaint() {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [loadingLocation, setLoadingLocation] = useState(true);
 
+  const history = useHistory();
   const {
     register,
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { errors },
   } = useForm<ComplaintForm>({
     resolver: zodResolver(complaintSchema),
+    defaultValues: {
+      lat: 4.60971, // Bogotá
+      lng: -74.08175,
+    },
   });
 
   // Obtener ubicación automáticamente al cargar
@@ -56,7 +63,8 @@ export default function CreateComplaint() {
         (error) => {
           console.error("Error obteniendo ubicación:", error);
           present({
-            message: "No se pudo obtener tu ubicación automáticamente. Por favor selecciona una en el mapa.",
+            message:
+              "No se pudo obtener tu ubicación automáticamente. Por favor selecciona una en el mapa.",
             duration: 3000,
             position: "top",
             color: "warning",
@@ -72,7 +80,8 @@ export default function CreateComplaint() {
     } else {
       setLoadingLocation(false);
       present({
-        message: "Geolocalización no disponible. Por favor selecciona una ubicación en el mapa.",
+        message:
+          "Geolocalización no disponible. Por favor selecciona una ubicación en el mapa.",
         duration: 3000,
         position: "top",
         color: "warning",
@@ -81,37 +90,25 @@ export default function CreateComplaint() {
   }, [setValue, present]);
 
   const onSubmit = async (data: ComplaintForm) => {
+    console.log("DATA", data);
+
     try {
-      // Validar que el usuario esté autenticado
-      if (!user || !user.id) {
+      if (!user) {
         present({
           message: "Debes iniciar sesión para crear una denuncia",
-          duration: 2500,
+          duration: 1500,
           position: "top",
-          color: "danger",
         });
         return;
       }
-
-      // Validar que haya ubicación
-      if (!data.lat || !data.lng) {
-        present({
-          message: "Debes seleccionar una ubicación en el mapa",
-          duration: 2000,
-          position: "top",
-          color: "warning",
-        });
-        return;
-      }
-      
-      // Subir imágenes
+      // 1. Subir imágenes
       const imageUrls = data.images
         ? await uploadImages(data.images as File[])
         : [];
 
-      // Guardar denuncia
-      await createComplaint({
-        userId: user.id,
+      // 2. Guardar denuncia
+      const newId = await createComplaint({
+        userId: user.uid,
         title: data.title,
         description: data.description,
         categoria: data.categoria,
@@ -125,6 +122,18 @@ export default function CreateComplaint() {
         position: "top",
         color: "success",
       });
+      reset({
+        title: "",
+        description: "",
+        categoria: "",
+        images: [],
+        lat: 4.60971,
+        lng: -74.08175,
+      });
+      setPreviewImages([]);
+
+      // 4. Redirigir al detalle
+      history.push(`/complaint/${newId}`);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error desconocido";
 
@@ -257,9 +266,12 @@ export default function CreateComplaint() {
             />
             {watch("lat") && watch("lng") && (
               <p className="text-sm text-gray-600 mt-2">
-                📍 Ubicación: {watch("lat")?.toFixed(6)}, {watch("lng")?.toFixed(6)}
+                📍 Ubicación: {watch("lat")?.toFixed(6)},{" "}
+                {watch("lng")?.toFixed(6)}
               </p>
             )}
+            {errors.lat && <p className="text-red-600">{errors.lat.message}</p>}
+            {errors.lng && <p className="text-red-600">{errors.lng.message}</p>}
           </IonCardContent>
         </IonCard>
 

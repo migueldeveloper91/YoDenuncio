@@ -39,6 +39,7 @@ export default function Login() {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Error desconocido";
+      console.log(error);
       present({
         message: "Error al iniciar sesión: " + errorMessage,
         duration: 1500,

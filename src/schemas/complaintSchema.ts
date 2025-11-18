@@ -2,11 +2,16 @@ import { z } from "zod";
 
 export const complaintSchema = z.object({
   title: z.string().min(3, "El título es obligatorio"),
-  description: z.string().min(10, "La descripción es muy corta"),
-  categoria: z.string().min(1, "Selecciona una categoría"),
-  lat: z.number().min(-90).max(90).optional(),
-  lng: z.number().min(-180).max(180).optional(),
+  description: z.string().min(10, "La descripción es obligatoria"),
+  categoria: z.string().min(1, "Debe seleccionar una categoría"),
+
   images: z.array(z.any()).optional(),
+  lat: z.number().refine((v) => v !== undefined, {
+    message: "La ubicación es obligatoria",
+  }),
+  lng: z.number().refine((v) => v !== undefined, {
+    message: "La ubicación es obligatoria",
+  }),
 });
 
 export type ComplaintForm = z.infer<typeof complaintSchema>;
