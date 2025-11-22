@@ -7,6 +7,8 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { sendWelcomeEmail } from "@/utils/emailService";
+import { createNotification } from "./notificationService";
 
 export async function registerUser(
   email: string,
@@ -32,6 +34,28 @@ export async function registerUser(
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
+
+  // Enviar correo de bienvenida
+  try {
+    await sendWelcomeEmail(email, name);
+    console.log("Correo de bienvenida enviado a:", email);
+  } catch (emailError) {
+    console.error("Error enviando correo de bienvenida:", emailError);
+    // No detenemos el registro si falla el correo
+  }
+
+  // Crear notificación de bienvenida en Firestore
+  try {
+    await createNotification({
+      userId: user.uid,
+      type: "welcome",
+      title: "¡Bienvenido a YoDenuncio!",
+      message: `Hola ${name}, gracias por registrarte. Ahora puedes crear denuncias y ayudar a mejorar tu comunidad.`,
+    });
+    console.log("Notificación de bienvenida creada");
+  } catch (notifError) {
+    console.error("Error creando notificación:", notifError);
+  }
 
   return user;
 }
