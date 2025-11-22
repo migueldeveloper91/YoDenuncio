@@ -7,6 +7,7 @@ interface User {
   uid: string;
   name: string;
   email: string;
+  displayName?: string;
 }
 
 interface UserStore {
@@ -36,10 +37,17 @@ const useUserStore = create<UserStore>((set) => ({
         uid: firebaseUser.uid,
         name: firebaseUser.displayName ?? "",
         email: firebaseUser.email ?? "",
+        displayName: firebaseUser.displayName ?? "",
       };
       await setDoc(userRef, userData);
     } else {
-      userData = snap.data() as User;
+      const data = snap.data();
+      userData = {
+        uid: firebaseUser.uid,
+        name: data.fullName || data.name || firebaseUser.displayName || "",
+        email: data.email || firebaseUser.email || "",
+        displayName: firebaseUser.displayName || data.fullName || data.name || "",
+      };
     }
 
     set({ user: userData });

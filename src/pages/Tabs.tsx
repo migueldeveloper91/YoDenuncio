@@ -13,6 +13,8 @@ import { useEffect, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 
 import { useComplaintsStore } from "@/stores/useComplaintsStore";
+import useUserStore from "@/stores/userStore";
+import { getUserNotifications } from "@/services/notificationService";
 import Alerts from "./Alerts/Alerts";
 import NewReport from "./CreateComplaint/index";
 import Home from "./Home/Home";
@@ -21,12 +23,24 @@ import Profile from "./Profile/Profile";
 export default function Tabs() {
   const [notificationCount, setNotificationCount] = useState(0);
   const { fetchAll, all } = useComplaintsStore();
+  const user = useUserStore((s) => s.user);
   console.log(all);
+
+  const loadUnreadCount = async () => {
+    if (!user) return;
+    const notifications = await getUserNotifications(user.uid);
+    const unreadCount = notifications.filter((n) => !n.read).length;
+    setNotificationCount(unreadCount);
+  };
 
   useEffect(() => {
     fetchAll();
-    setNotificationCount(2);
-  }, []);
+    loadUnreadCount();
+    
+    // Actualizar contador cada 30 segundos
+    const interval = setInterval(loadUnreadCount, 30000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   return (
     <IonTabs>

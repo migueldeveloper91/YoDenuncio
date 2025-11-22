@@ -18,6 +18,8 @@ import { useForm } from "react-hook-form";
 import { ComplaintForm, complaintSchema } from "@/schemas/complaintSchema";
 import { useComplaintsStore } from "@/stores/useComplaintsStore";
 import useUserStore from "@/stores/userStore";
+import { sendDenunciaEmail } from "@/utils/emailService";
+import { createNotification } from "@/services/notificationService";
 
 import LocationPicker from "@/components/LocationPicker";
 import Button from "@/components/ui/Button";
@@ -116,9 +118,36 @@ export default function CreateComplaint() {
         images: imageUrls,
       });
 
+      // 3. Enviar correo de confirmación
+      try {
+        await sendDenunciaEmail(
+          user.email || "",
+          user.displayName || "Usuario",
+          data.title,
+          data.description
+        );
+        console.log("Correo de denuncia enviado");
+      } catch (emailError) {
+        console.error("Error enviando correo:", emailError);
+      }
+
+      // 4. Crear notificación en Firestore
+      try {
+        await createNotification({
+          userId: user.uid,
+          type: "denuncia_created",
+          title: "Denuncia creada exitosamente",
+          message: `Tu denuncia "${data.title}" ha sido publicada y está siendo revisada.`,
+          relatedId: newId,
+        });
+        console.log("Notificación de denuncia creada");
+      } catch (notifError) {
+        console.error("Error creando notificación:", notifError);
+      }
+
       present({
-        message: "Denuncia creada exitosamente",
-        duration: 1500,
+        message: "Denuncia creada exitosamente ✅ Te enviamos un correo de confirmación",
+        duration: 2000,
         position: "top",
         color: "success",
       });
