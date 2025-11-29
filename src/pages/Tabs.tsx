@@ -12,12 +12,15 @@ import { addCircle, alertCircle, home, person } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 
+import { getUserNotifications } from "@/services/notificationService";
 import { useComplaintsStore } from "@/stores/useComplaintsStore";
 import useUserStore from "@/stores/userStore";
-import { getUserNotifications } from "@/services/notificationService";
+import AboutUs from "./AboutUs/AboutUs";
 import Alerts from "./Alerts/Alerts";
 import NewReport from "./CreateComplaint/index";
+import HelpAndSupport from "./HelpAndSupport/HelpAndSupport";
 import Home from "./Home/Home";
+import EditProfile from "./Profile/EditProfile";
 import Profile from "./Profile/Profile";
 
 export default function Tabs() {
@@ -36,7 +39,7 @@ export default function Tabs() {
   useEffect(() => {
     fetchAll();
     loadUnreadCount();
-    
+
     // Actualizar contador cada 30 segundos
     const interval = setInterval(loadUnreadCount, 30000);
     return () => clearInterval(interval);
@@ -49,6 +52,9 @@ export default function Tabs() {
         <Route exact path="/tabs/profile" component={Profile} />
         <Route exact path="/tabs/alerts" component={Alerts} />
         <Route exact path="/tabs/new" component={NewReport} />
+        <Route exact path="/tabs/about" component={AboutUs} />
+        <Route exact path="/tabs/help" component={HelpAndSupport} />
+        <Route exact path="/tabs/EditProfile" component={EditProfile} />
 
         <Route exact path="/tabs">
           <Redirect to="/tabs/home" />

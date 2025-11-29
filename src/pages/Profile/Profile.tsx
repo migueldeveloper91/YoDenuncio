@@ -2,44 +2,83 @@
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 import { logoutUser } from "@/services/firebaseAuth";
+import { db } from "@/utils/firebaseConfig";
 import {
   IonAlert,
   IonContent,
   IonHeader,
   IonIcon,
+  IonLoading,
   IonPage,
   IonTitle,
   IonToast,
   IonToolbar,
 } from "@ionic/react";
+import { doc, getDoc } from "firebase/firestore";
 import { helpCircle, informationCircle, logOut, pencil } from "ionicons/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import "./Profile.css";
-// Import package.json to display the real app version
+
 import packageJson from "../../../package.json";
+import "./Profile.css";
+
+interface UserProfile {
+  fullName?: string;
+  name?: string;
+  photoURL?: string;
+  email?: string;
+}
 
 export default function Profile() {
   const { user } = useAuth();
   const history = useHistory();
+
+  const [userData, setUserData] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showLogoutAlert, setShowLogoutAlert] = useState(false);
 
+  // 🔥 Cargar datos del usuario desde Firestore
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (!user) return;
+
+      try {
+        const ref = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
+
+        if (snap.exists()) {
+          setUserData(snap.data());
+        } else {
+          setUserData(null);
+        }
+      } catch (err) {
+        console.error("Error cargando datos:", err);
+      }
+
+      setLoading(false);
+    };
+
+    loadUserData();
+  }, [user]);
+
+  // 🔥 Función para cerrar sesión
   const handleLogout = async () => {
     try {
       setIsLoading(true);
       await logoutUser();
       setToastMessage("Sesión cerrada exitosamente");
       setShowToast(true);
-      // Esperar un poco para que el usuario vea el mensaje
+
       setTimeout(() => {
         history.replace("/login");
       }, 1000);
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
-      setToastMessage("Error al cerrar sesión. Inténtalo de nuevo.");
+      setToastMessage("Error al cerrar sesión");
       setShowToast(true);
       setIsLoading(false);
     }
@@ -47,15 +86,25 @@ export default function Profile() {
 
   const getMemberSinceDate = () => {
     if (user?.metadata?.creationTime) {
-      const date = new Date(user.metadata.creationTime);
-      return `${date.getDate().toString().padStart(2, "0")}/${(
-        date.getMonth() + 1
-      )
-        .toString()
-        .padStart(2, "0")}/${date.getFullYear()}`;
+      const d = new Date(user.metadata.creationTime);
+      return `${String(d.getDate()).padStart(2, "0")}/${String(
+        d.getMonth() + 1
+      ).padStart(2, "0")}/${d.getFullYear()}`;
     }
-    return "15/01/2025";
+    return "---";
   };
+
+  if (loading) {
+    return <IonLoading isOpen={true} message="Cargando perfil..." />;
+  }
+
+  const displayName =
+    userData?.fullName || userData?.name || user?.displayName || "Usuario";
+
+  const photoURL =
+    userData?.photoURL ||
+    user?.photoURL ||
+    "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
   return (
     <IonPage>
@@ -64,29 +113,31 @@ export default function Profile() {
           <IonTitle>Mi perfil</IonTitle>
         </IonToolbar>
       </IonHeader>
+
       <IonContent className="ion-no-padding bg-gray-100">
-        {/* Profile Card */}
         <div className="px-6 py-4">
+          {/* Profile Card */}
           <div className="bg-white rounded-3xl p-6 shadow-sm">
-            {/* Profile Image and Info */}
             <div className="text-center mb-6">
               <div className="relative inline-block">
                 <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+                  src={photoURL}
                   alt="Profile"
                   className="w-20 h-20 rounded-full object-cover mx-auto"
                 />
               </div>
+
               <h2 className="text-xl font-semibold text-gray-800 mt-3">
-                {user?.displayName || "Juan Sánchez"}
+                {displayName}
               </h2>
+
               <p className="text-gray-500 text-sm mt-1">
-                {user?.email || "juan.sanchez@example.com"}
+                {user?.email || "Sin email"}
               </p>
             </div>
           </div>
 
-          {/* Member Since Card */}
+          {/* Member Since */}
           <div className="bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-secondary-dark)] rounded-2xl p-6 mt-4 shadow-sm">
             <p className="text-orange-100 text-sm font-medium mb-1">
               Miembro desde
@@ -96,10 +147,12 @@ export default function Profile() {
             </p>
           </div>
 
-          {/* Menu Options */}
+          {/* Options */}
           <div className="mt-6 space-y-3">
-            {/* Edit Profile */}
-            <button className="w-full bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+            <button
+              onClick={() => history.push("/tabs/EditProfile")}
+              className="w-full bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow"
+            >
               <div className="flex items-center">
                 <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-4">
                   <IonIcon icon={pencil} className="text-orange-600 text-sm" />
@@ -109,8 +162,10 @@ export default function Profile() {
               <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
             </button>
 
-            {/* About YoDenuncio */}
-            <button className="w-full bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+            <button
+              onClick={() => history.push("/tabs/about")}
+              className="w-full bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow"
+            >
               <div className="flex items-center">
                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-4">
                   <IonIcon
@@ -125,8 +180,10 @@ export default function Profile() {
               <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
             </button>
 
-            {/* Help and Support */}
-            <button className="w-full bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+            <button
+              onClick={() => history.push("/tabs/help")}
+              className="w-full bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow"
+            >
               <div className="flex items-center">
                 <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center mr-4">
                   <IonIcon
@@ -142,11 +199,10 @@ export default function Profile() {
             </button>
           </div>
 
-          {/* Logout Button */}
+          {/* Logout */}
           <div className="mt-8 mb-8">
             <Button
               onClick={() => setShowLogoutAlert(true)}
-              type="submit"
               label="Cerrar sesión"
               variant="danger"
               icon={logOut}
